@@ -2,23 +2,23 @@
 #recipiNo : 7.16
 #makeDate : 2019/05/18
 
+import csv
 import smtplib
 
-GMAIL_USER = 'your_name@gmail.com'
-GMAIL_PASS = 'your_password'
-SMTP_SERVER = 'smtp.gmail.com'
-SMTP_PORT = 587
+with open('mail_profile.csv', newline='') as csvfile:
+    reader = csv.DictReader(csvfile)
+    prof = row
 
 def send_email(recipient, subject, text):
-    smtpserver = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
+    smtpserver = smtplib.SMTP(prof['SMTP_SERVER'], int(prof['SMTP_PORT']))
     smtpserver.ehlo()
     smtpserver.starttls()
     smtpserver.ehlo
-    smtpserver.login(GMAIL_USER, GMAIL_PASS)
-    header = 'To: ' + recipient + '\n' + 'From: ' + GMAIL_USER
+    smtpserver.login(prof['GMAIL_USER'], prof['GMAIL_PASS'])
+    header = 'To: ' + recipient + '\n' + 'From: ' + prof['GMAIL_USER']
     header = header + '\n' + 'Subject: ' + subject + '\n'
     msg = header + '\n' + text + ' \n\n'
-    smtpserver.sendmail(GMAIL_USER, recipient, msg)
+    smtpserver.sendmail(prof['GMAIL_USER'], recipient, msg)
     smtpserver.close()
     
-send_email('destination_email_address', 'sub', 'this is text')
+send_email('receive@icloud.com', 'sub', 'this is text')
