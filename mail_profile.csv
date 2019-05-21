@@ -1,2 +1,2 @@
 GMAIL_USER,GMAIL_PASS,SMTP_SERVER,SMTP_PORT
-send@gmail.com,password,stmp.gmail.com,587
+send@gmail.com,password,smtp.gmail.com,587
