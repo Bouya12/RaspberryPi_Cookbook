@@ -4,6 +4,10 @@
 
 import csv
 import smtplib
+from email.mime.text import MIMEText
+from email.header import Header
+
+charset = 'iso-2022-jp'
 
 with open('mail_profile.csv', newline='') as csvfile:
     reader = csv.DictReader(csvfile)
@@ -11,19 +15,19 @@ with open('mail_profile.csv', newline='') as csvfile:
         prof = row
 
 def send_email(recipient, subject, text):
+
+    msg = MIMEText(message, 'plain', charset)
+    msg['Subject'] = Header(subject.encode(charset), charset)
+
     smtpserver = smtplib.SMTP(prof['SMTP_SERVER'], int(prof['SMTP_PORT']))
     smtpserver.ehlo()
     smtpserver.starttls()
-    smtpserver.ehlo
     smtpserver.login(prof['GMAIL_USER'], prof['GMAIL_PASS'])
-    header = 'To: ' + recipient + '\n' + 'From: ' + prof['GMAIL_USER']
-    header = header + '\n' + 'Subject: ' + subject + '\n'
-    msg = header + '\n' + text + ' \n\n'
-    smtpserver.sendmail(prof['GMAIL_USER'], recipient, msg)
+    smtpserver.sendmail(prof['GMAIL_USER'], recipient, msg.as_string())
     smtpserver.close()
 
 
-reciever = input("Please enter recipient's mail address：")
-subject = input("Please enter a subject：")
-message = input("Please enter a message：")
+reciever = input('送信先メールアドレスを入力してください：')
+subject = input('件名を入力してください：')
+message = input('メッセージを入力してください：')
 send_email(reciever, subject, message)
