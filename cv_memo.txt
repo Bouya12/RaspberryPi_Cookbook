@@ -1,0 +1,102 @@
+■ simpleCVのインストール時に「Memory Error」
+
+pi@raspberrypi:~ $ sudo pip install https://github.com/sightmachine/SimpleCV/zipball/master
+Collecting https://github.com/sightmachine/SimpleCV/zipball/master
+  Downloading https://github.com/sightmachine/SimpleCV/zipball/master
+     / 74.5MB 12.1MB/sException:
+Traceback (most recent call last):
+  File "/usr/lib/python2.7/dist-packages/pip/basecommand.py", line 215, in main
+    status = self.run(options, args)
+  File "/usr/lib/python2.7/dist-packages/pip/commands/install.py", line 353, in run
+    wb.build(autobuilding=True)
+  File "/usr/lib/python2.7/dist-packages/pip/wheel.py", line 749, in build
+    self.requirement_set.prepare_files(self.finder)
+  File "/usr/lib/python2.7/dist-packages/pip/req/req_set.py", line 380, in prepare_files
+    ignore_dependencies=self.ignore_dependencies))
+  File "/usr/lib/python2.7/dist-packages/pip/req/req_set.py", line 620, in _prepare_file
+    session=self.session, hashes=hashes)
+  File "/usr/lib/python2.7/dist-packages/pip/download.py", line 821, in unpack_url
+    hashes=hashes
+  File "/usr/lib/python2.7/dist-packages/pip/download.py", line 659, in unpack_http_url
+    hashes)
+  File "/usr/lib/python2.7/dist-packages/pip/download.py", line 882, in _download_http_url
+    _download_url(resp, link, content_file, hashes)
+  File "/usr/lib/python2.7/dist-packages/pip/download.py", line 605, in _download_url
+    consume(downloaded_chunks)
+  File "/usr/lib/python2.7/dist-packages/pip/utils/__init__.py", line 870, in consume
+    deque(iterator, maxlen=0)
+  File "/usr/lib/python2.7/dist-packages/pip/download.py", line 571, in written_chunks
+    for chunk in chunks:
+  File "/usr/lib/python2.7/dist-packages/pip/utils/ui.py", line 139, in iter
+    for x in it:
+  File "/usr/lib/python2.7/dist-packages/pip/download.py", line 560, in resp_read
+    decode_content=False):
+  File "/usr/share/python-wheels/urllib3-1.19.1-py2.py3-none-any.whl/urllib3/response.py", line 428, in stream
+    for line in self.read_chunked(amt, decode_content=decode_content):
+  File "/usr/share/python-wheels/urllib3-1.19.1-py2.py3-none-any.whl/urllib3/response.py", line 590, in read_chunked
+    self._update_chunk_length()
+  File "/usr/share/python-wheels/CacheControl-0.11.7-py2.py3-none-any.whl/cachecontrol/adapter.py", line 106, in _update_chunk_length
+    self._fp._close()
+  File "/usr/share/python-wheels/CacheControl-0.11.7-py2.py3-none-any.whl/cachecontrol/filewrapper.py", line 50, in _close
+    self.__callback(self.__buf.getvalue())
+  File "/usr/share/python-wheels/CacheControl-0.11.7-py2.py3-none-any.whl/cachecontrol/controller.py", line 275, in cache_response
+    self.serializer.dumps(request, response, body=body),
+  File "/usr/share/python-wheels/CacheControl-0.11.7-py2.py3-none-any.whl/cachecontrol/serialize.py", line 87, in dumps
+    ).encode("utf8"),
+MemoryError
+
+☆ キャッシュ未作成のオプション追加で解決
+pi@raspberrypi:~ $ sudo pip install https://github.com/sightmachine/SimpleCV/zipball/master --no-cache-dir
+Collecting https://github.com/sightmachine/SimpleCV/zipball/master
+  Downloading https://github.com/sightmachine/SimpleCV/zipball/master
+     | 53.8MB 12.4MB/s
+Installing collected packages: SimpleCV
+  Running setup.py install for SimpleCV ... done
+Successfully installed SimpleCV-1.3
+
+
+
+■simpleCV実行時にAttributeError
+pi@raspberrypi:~ $ simplecv
+
+/usr/lib/python2.7/dist-packages/IPython/config.py:13: ShimWarning: The `IPython.config` package has been deprecated. You should import from traitlets.config instead.
+  "You should import from traitlets.config instead.", ShimWarning)
+/usr/lib/python2.7/dist-packages/IPython/frontend.py:21: ShimWarning: The top-level `frontend` package has been deprecated. All its subpackages have been moved to the top `IPython` level.
+  "All its subpackages have been moved to the top `IPython` level.", ShimWarning)
+/usr/lib/python2.7/dist-packages/IPython/core/interactiveshell.py:448: UserWarning: As of IPython 5.0 `PromptManager` config will have no effect and has been replaced by TerminalInteractiveShell.prompts_class
+  warn('As of IPython 5.0 `PromptManager` config will have no effect'
+---------------------------------------------------------------------------
+AttributeError                            Traceback (most recent call last)
+/usr/local/bin/simplecv in <module>()
+      9     sys.argv[0] = re.sub(r'(-script\.pyw?|\.exe)?$', '', sys.argv[0])
+     10     sys.exit(
+---> 11         load_entry_point('SimpleCV==1.3', 'console_scripts', 'simplecv')()
+     12     )
+
+/usr/local/lib/python2.7/dist-packages/SimpleCV/Shell/Shell.pyc in main(*args)
+    255     init_logging(log_level)
+    256     shellclear()
+--> 257     scvShell = run_shell(interface)
+
+/usr/local/lib/python2.7/dist-packages/SimpleCV/Shell/Shell.pyc in run_shell(shell)
+    213     for shell in available_shells:
+    214         try:
+--> 215             return globals()[shell]()
+    216         except ImportError:
+    217             pass
+
+/usr/local/lib/python2.7/dist-packages/SimpleCV/Shell/Shell.pyc in setup_ipython()
+    125         scvShell = InteractiveShellEmbed(config=cfg, banner1=banner,
+    126                                          exit_msg=exit_msg)
+--> 127         scvShell.define_magic("tutorial", magic_tutorial)
+    128         scvShell.define_magic("clear", magic_clear)
+    129         scvShell.define_magic("example", magic_examples)
+
+AttributeError: 'InteractiveShellEmbed' object has no attribute 'define_magic'
+
+☆ Python2.7で動いていたので、IPythonのバージョンをダウングレードすることによって解決
+
+
+
+■ SimpleCVでcamera関数を実行しようとしたところ、lsofが見つからないというエラー
+→ lsofをダウンロードすることで解決できる？
