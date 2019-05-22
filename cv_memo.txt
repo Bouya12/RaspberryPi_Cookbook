@@ -100,3 +100,20 @@ AttributeError: 'InteractiveShellEmbed' object has no attribute 'define_magic'
 
 ■ SimpleCVでcamera関数を実行しようとしたところ、lsofが見つからないというエラー
 → lsofをダウンロードすることで解決できる？
+SimpleCV:1> c = Camera()
+/bin/sh: 1: lsof: not found
+
+
+☆ apt-getで「lsof」をインストール、再度実行することで問題が解決した
+pi@raspberrypi:~ $ sudo apt-get remove lsof
+パッケージリストを読み込んでいます... 完了
+依存関係ツリーを作成しています                
+状態情報を読み取っています... 完了
+以下のパッケージは「削除」されます:
+  lsof
+アップグレード: 0 個、新規インストール: 0 個、削除: 1 個、保留: 10 個。
+この操作後に 470 kB のディスク容量が解放されます。
+続行しますか? [Y/n] y
+(データベースを読み込んでいます ... 現在 108676 個のファイルとディレクトリがインストールされています。)
+lsof (4.89+dfsg-0.1) を削除しています ...
+man-db (2.7.6.1-2) のトリガを処理しています ...
